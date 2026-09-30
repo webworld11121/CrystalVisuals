@@ -305,11 +305,14 @@ kbd{font-family:var(--mono);font-size:.82em;background:rgba(123,92,255,.16);
   box-shadow:0 20px 46px -18px #000,0 0 32px -6px rgba(232,121,249,.85)}
 .fab .logo__gem{width:14px;height:14px}
 
+/* ВАЖНО: атрибут hidden должен побеждать любые display в этом файле */
+[hidden]{display:none !important}
+
 /* ============================================
    GUI: МОДАЛКА
    ============================================ */
-.guiOv{position:fixed;inset:0;z-index:400;display:grid;place-items:center;padding:24px}
-.guiOv[hidden]{display:none}
+.guiOv{position:fixed;inset:0;z-index:400;display:grid;place-items:center;padding:24px;
+  perspective:1600px}
 .guiOv__bg{position:absolute;inset:0;background:rgba(4,4,10,.8);
   backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
   animation:fade .2s var(--ease)}
@@ -323,19 +326,71 @@ kbd{font-family:var(--mono);font-size:.82em;background:rgba(123,92,255,.16);
              inset 0 1px 0 rgba(255,255,255,.08);
   backdrop-filter:blur(28px) saturate(150%);
   -webkit-backdrop-filter:blur(28px) saturate(150%);
-  animation:panIn .26s var(--ease);
-  transform:scale(var(--z,1));
-  transition:transform .18s var(--ease);
+  animation:panIn .34s var(--ease);
+  /* --rx / --ry — наклон за курсором, --tz — приближение */
+  transform:rotateX(var(--rx,0deg)) rotateY(var(--ry,0deg)) translateZ(0) scale(var(--z,1));
+  transform-style:preserve-3d;
+  transition:transform .3s var(--ease),box-shadow .3s var(--ease);
+  will-change:transform;
 }
-@keyframes panIn{from{opacity:0;transform:scale(.94) translateY(10px)}}
+@keyframes panIn{
+  0%{opacity:0;transform:scale(.9) rotateX(14deg) translateY(24px)}
+  60%{opacity:1}
+  100%{opacity:1;transform:rotateX(0) rotateY(0) translateY(0) scale(var(--z,1))}
+}
 .guiPan.is-drag{transition:none;cursor:grabbing}
+.guiPan.is-drag .guiPan__glow{opacity:0}
+
+/* свечение, которое следует за курсором */
+.guiPan__glow{
+  position:absolute;inset:0;border-radius:16px;pointer-events:none;z-index:0;
+  background:radial-gradient(420px circle at var(--gx,50%) var(--gy,50%),
+    rgba(232,121,249,.16),rgba(123,92,255,.07) 45%,transparent 70%);
+  transition:opacity .4s;opacity:1;
+}
+
+/* блик, пробегающий по панели */
+.guiPan__sheen{
+  position:absolute;inset:0;border-radius:16px;pointer-events:none;z-index:1;overflow:hidden;
+}
+.guiPan__sheen::after{
+  content:"";position:absolute;top:-60%;left:-40%;width:60%;height:220%;
+  background:linear-gradient(100deg,transparent,rgba(255,255,255,.07),transparent);
+  transform:translateX(-140%) rotate(12deg);
+  animation:sheen 7s ease-in-out infinite;
+}
+@keyframes sheen{
+  0%,72%{transform:translateX(-140%) rotate(12deg)}
+  100%{transform:translateX(420%) rotate(12deg)}
+}
+
+/* осколки при закрытии */
+.guiPan__shards{position:absolute;inset:0;border-radius:16px;pointer-events:none;
+  z-index:2;overflow:hidden;opacity:0}
+.guiPan.is-break .guiPan__shards{opacity:1}
+.guiPan.is-break .guiPan__sheen{animation:none}
+.shard{
+  position:absolute;left:50%;top:50%;width:70px;height:70px;
+  margin:-35px 0 0 -35px;
+  background:linear-gradient(135deg,rgba(167,139,250,.5),rgba(232,121,249,.3));
+  clip-path:polygon(50% 0,100% 35%,100% 65%,50% 100%,0 65%,0 35%);
+  transform:translate(0,0) rotate(0) scale(1);
+}
+.guiPan.is-break .shard{animation:shatter .62s cubic-bezier(.3,.1,.2,1) forwards}
+@keyframes shatter{
+  0%{transform:translate(0,0) rotate(0) scale(1);opacity:1}
+  100%{transform:translate(var(--dx),var(--dy)) rotate(var(--dr)) scale(.15);opacity:0}
+}
 
 /* строка перетаскивания */
 .guiPan__drag{
+  position:relative;z-index:5;
   display:flex;align-items:center;gap:10px;padding:12px 14px;
   background:rgba(123,92,255,.14);border-bottom:1px solid var(--line);
   border-radius:16px 16px 0 0;cursor:grab;user-select:none;
+  transition:background .25s;
 }
+.guiPan__drag:hover{background:rgba(123,92,255,.22)}
 .guiPan__drag:active{cursor:grabbing}
 .guiPan__t{font-family:var(--pix);font-size:.68rem}
 .guiPan__v{font-family:var(--mono);font-size:.66rem;color:var(--mute)}
@@ -350,8 +405,9 @@ kbd{font-family:var(--mono);font-size:.82em;background:rgba(123,92,255,.16);
 .guiPan__x:hover{color:#fff;background:var(--acc)}
 
 /* верх: поиск + профиль */
-.guiTop{display:flex;align-items:center;gap:12px;padding:10px 14px;
-  border-bottom:1px solid var(--line);background:rgba(0,0,0,.2)}
+.guiTop{position:relative;z-index:5;display:flex;align-items:center;gap:12px;padding:10px 14px;
+  border-bottom:1px solid var(--line);background:rgba(0,0,0,.2);
+  transform:translateZ(14px)}
 .guiTop__s{position:relative;display:flex;align-items:center;flex:1;min-width:0}
 .guiTop__s svg{position:absolute;left:11px;width:14px;height:14px;fill:none;
   stroke:var(--mute);stroke-width:2;stroke-linecap:round;pointer-events:none}
@@ -369,9 +425,9 @@ kbd{font-family:var(--mono);font-size:.82em;background:rgba(123,92,255,.16);
   background-size:cover;background-position:center}
 
 /* тело: сайдбар + контент */
-.guiBody{display:grid;grid-template-columns:150px 1fr;min-height:420px}
+.guiBody{position:relative;z-index:5;display:grid;grid-template-columns:150px 1fr;min-height:420px}
 .guiSide{padding:8px;border-right:1px solid var(--line);background:rgba(0,0,0,.18);
-  border-radius:0 0 0 16px}
+  border-radius:0 0 0 16px;transform:translateZ(8px)}
 .guiBrand{display:flex;align-items:center;justify-content:center;gap:6px;
   padding:9px 6px;margin-bottom:12px;border-radius:8px;
   background:rgba(123,92,255,.16);font-family:var(--pix);font-size:.58rem}
@@ -391,48 +447,87 @@ kbd{font-family:var(--mono);font-size:.82em;background:rgba(123,92,255,.16);
   background:currentColor;opacity:.4}
 .guiRow span{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .guiRow b{font-family:var(--mono);font-size:.65rem;font-weight:400;opacity:.55}
-.guiRow:hover{background:rgba(123,92,255,.14);color:var(--txt)}
+.guiRow:hover{background:rgba(123,92,255,.14);color:var(--txt);
+  transform:translateX(3px)}
 .guiRow:hover i{opacity:.85}
 .guiRow.is-on{background:linear-gradient(90deg,rgba(123,92,255,.36),rgba(123,92,255,.05));
   color:#fff}
-.guiRow.is-on::before{content:"";position:absolute;left:0;top:3px;bottom:3px;width:2px;
-  border-radius:2px;background:linear-gradient(180deg,var(--acc2),var(--pink))}
+.guiRow.is-on::before{
+  content:"";position:absolute;left:0;top:3px;bottom:3px;width:2px;border-radius:2px;
+  background:linear-gradient(180deg,var(--acc2),var(--pink));
+  animation:barIn .26s var(--ease);
+}
+@keyframes barIn{from{height:0;top:50%}to{height:auto;top:3px}}
 .guiRow.is-on b{color:var(--acc2);opacity:1}
+.guiRow{transition:background .18s,color .18s,transform .18s var(--ease)}
 
 /* контент */
-.guiMain{position:relative;padding:12px;min-height:420px;overflow-y:auto}
+.guiMain{position:relative;z-index:5;padding:12px;min-height:420px;overflow-y:auto;
+  transform:translateZ(18px)}
 .guiMain::-webkit-scrollbar{width:6px}
 .guiMain::-webkit-scrollbar-track{background:rgba(255,255,255,.04);border-radius:99px}
 .guiMain::-webkit-scrollbar-thumb{background:rgba(167,139,250,.3);border-radius:99px}
+.guiMain::-webkit-scrollbar-thumb:hover{background:rgba(167,139,250,.5)}
 
 .guiPh{display:grid;place-items:center;gap:16px;text-align:center;
-  min-height:380px;padding:20px}
+  min-height:380px;padding:20px;animation:phIn .34s var(--ease)}
+@keyframes phIn{from{opacity:0;transform:scale(.97)}}
 .guiPh__img{
-  width:110px;height:110px;
+  width:110px;height:110px;cursor:pointer;
   background-size:contain;background-repeat:no-repeat;background-position:center;
   background-image:radial-gradient(circle at 40% 35%,rgba(232,121,249,.45),rgba(123,92,255,.14) 62%,transparent 74%);
   filter:drop-shadow(0 0 24px rgba(232,121,249,.5));
   animation:kityFloat 5.5s ease-in-out infinite;
+  transition:filter .3s,transform .3s var(--ease);
 }
-@keyframes kityFloat{0%,100%{transform:translateY(0)}50%{transform:translateY(-9px)}}
+.guiPh__img:hover{filter:drop-shadow(0 0 42px rgba(232,121,249,.9)) brightness(1.12)}
+.guiPh__img:active{transform:scale(.95)}
+@keyframes kityFloat{
+  0%,100%{transform:translateY(0) rotate(-1deg)}
+  50%{transform:translateY(-11px) rotate(1deg)}
+}
 .guiPh__img.has-gif{background-image:none;filter:drop-shadow(0 0 26px rgba(232,121,249,.6))}
 .guiPh p{color:var(--mute);font-size:.82rem}
 
 .guiGrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(118px,1fr));gap:7px}
-.gcard{position:relative;padding:10px 10px 9px;cursor:pointer;font-family:inherit;
-  color:var(--txt);text-align:left;border-radius:9px;
+
+/* карточка: появление лесенкой, наклон за мышью, подъём */
+.gcard{
+  position:relative;padding:10px 10px 9px;cursor:pointer;font-family:inherit;
+  color:var(--txt);text-align:left;border-radius:9px;overflow:hidden;
   background:rgba(255,255,255,.055);border:1px solid var(--line);
-  transition:background .16s,border-color .16s,transform .12s}
-.gcard:hover{background:rgba(123,92,255,.22);border-color:var(--acc2);transform:translateY(-2px)}
+  transform:perspective(600px)
+             rotateX(var(--crx,0deg)) rotateY(var(--cry,0deg)) translateY(0) scale(var(--cs,1));
+  transition:transform .2s var(--ease),background .18s,border-color .18s,box-shadow .2s;
+  animation:cardIn .34s var(--ease) backwards;
+}
+@keyframes cardIn{from{opacity:0;transform:translateY(10px) scale(.96)}}
+.gcard:hover{
+  background:rgba(123,92,255,.24);border-color:var(--acc2);
+  box-shadow:0 10px 26px -12px rgba(123,92,255,.9);
+}
+.gcard:active{transform:scale(.97)}
+
+/* блик пробегает по наведённой карточке */
+.gcard::after{
+  content:"";position:absolute;inset:0;pointer-events:none;border-radius:9px;
+  background:linear-gradient(115deg,transparent 30%,rgba(255,255,255,.16) 50%,transparent 70%);
+  background-size:250% 100%;background-position:200% 0;opacity:0;
+  transition:background-position .55s var(--ease),opacity .2s;
+}
+.gcard:hover::after{background-position:-60% 0;opacity:1}
+
 .gcard b{display:block;font-size:.74rem;font-weight:500;line-height:1.3;
   overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .gcard i{position:absolute;top:8px;right:8px;width:6px;height:6px;border-radius:50%;
-  background:var(--acc2);box-shadow:0 0 8px var(--acc2)}
+  background:var(--acc2);box-shadow:0 0 8px var(--acc2);
+  animation:dotPulse 2.2s ease-in-out infinite}
+@keyframes dotPulse{0%,100%{opacity:1}50%{opacity:.35}}
 .gcard.is-on{background:linear-gradient(150deg,rgba(123,92,255,.38),rgba(232,121,249,.22));
   border-color:var(--acc2)}
 .gcard.is-hi{border-color:var(--pink);background:rgba(232,121,249,.26)}
 .gcard em{display:block;font-style:normal;font-family:var(--mono);font-size:.6rem;
-  color:var(--acc2);margin-top:3px;opacity:0;transition:opacity .16s}
+  color:var(--acc2);margin-top:3px;opacity:0;transition:opacity .18s}
 .gcard:hover em,.gcard.is-on em{opacity:1}
 .guiNone{position:absolute;inset:0;display:grid;place-content:center;
   color:var(--mute);font-size:.85rem}
@@ -542,9 +637,101 @@ kbd{font-family:var(--mono);font-size:.82em;background:rgba(123,92,255,.16);
   .guiGrid{grid-template-columns:1fr 1fr}
 }
 
+/* ============================================
+   ДОПОЛНИТЕЛЬНЫЕ АНИМАЦИИ
+   ============================================ */
+
+/* --- магнитные кнопки: притягиваются к курсору --- */
+.magnetic{position:relative;will-change:transform}
+.magnetic span{position:relative;z-index:2}
+
+/* --- ripple от клика --- */
+.ripple{
+  position:absolute;border-radius:50%;transform:scale(0);pointer-events:none;
+  background:radial-gradient(circle,rgba(255,255,255,.55),transparent 70%);
+  animation:rip .58s var(--ease) forwards;z-index:1;
+}
+@keyframes rip{to{transform:scale(2.6);opacity:0}}
+
+/* --- наклон карточек модулей в браузере --- */
+.mchip{
+  transform:perspective(700px) rotateX(var(--trx,0deg)) rotateY(var(--try_,0deg)) translateY(0);
+  transition:transform .22s var(--ease),background .2s,border-color .2s,box-shadow .25s;
+  will-change:transform;
+}
+.mchip:hover{box-shadow:0 14px 34px -18px rgba(123,92,255,.9)}
+
+/* --- появление секций лесенкой --- */
+.js .rv{opacity:0;transform:translateY(22px);
+  transition:opacity .7s var(--ease),transform .7s var(--ease)}
+.js .rv.is-in{opacity:1;transform:none}
+
+/* --- заголовки с подсветкой при наведении --- */
+.head h2{position:relative;display:inline-block}
+.head h2::after{
+  content:"";position:absolute;left:0;bottom:-6px;height:2px;width:0;
+  background:linear-gradient(90deg,var(--acc),var(--pink));
+  border-radius:2px;transition:width .5s var(--ease);
+}
+.head:hover h2::after{width:100%}
+
+/* --- плитки шагов: подсветка и стрелка --- */
+.q{position:relative;overflow:hidden}
+.q::before{
+  content:"";position:absolute;left:0;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--acc2),var(--pink));
+  transform:scaleY(0);transform-origin:top;transition:transform .35s var(--ease);
+}
+.q:hover::before{transform:scaleY(1)}
+.q__n{transition:transform .3s var(--ease),box-shadow .3s}
+.q:hover .q__n{transform:scale(1.1) rotate(-4deg);
+  box-shadow:0 0 24px -4px rgba(123,92,255,1)}
+
+/* --- ценник: дыхание градиента --- */
+.trade__num{animation:priceBreath 3.6s ease-in-out infinite}
+@keyframes priceBreath{
+  0%,100%{filter:drop-shadow(0 0 0 rgba(123,92,255,0))}
+  50%{filter:drop-shadow(0 0 26px rgba(123,92,255,.55))}
+}
+
+/* --- FAQ: стрелка вращается --- */
+.msg summary::after{transition:transform .3s var(--ease),color .3s}
+.msg[open] summary::after{transform:rotate(90deg)}
+
+/* --- карточка скриншота: зум при наведении --- */
+.shot__img{transition:transform .55s var(--ease),filter .3s}
+.shot:hover .shot__img{transform:scale(1.05)}
+
+/* --- логотип: двойное вращение --- */
+.logo__gem{animation:gemPulse 3.6s ease-in-out infinite,gemSpin 9s linear infinite}
+@keyframes gemSpin{to{transform:rotateY(360deg)}}
+
+/* --- FAB: пульсация кольца --- */
+.fab::before{
+  content:"";position:absolute;inset:-1px;border-radius:999px;pointer-events:none;
+  background:linear-gradient(110deg,var(--acc),var(--pink));opacity:0;
+  animation:fabRing 2.6s ease-out infinite;
+}
+@keyframes fabRing{
+  0%{opacity:.7;transform:scale(1)}
+  70%,100%{opacity:0;transform:scale(1.14)}
+}
+
+/* --- скроллбар aurora реагирует на мышь (JS двигает --mx/--my) --- */
+.aurora{
+  transform:translate3d(var(--ax,0px),var(--ay,0px),0) scale(1.1);
+  transition:transform .6s var(--ease);
+}
+
+/* --- появление карточек FAQ с задержкой --- */
+.js .chat .msg{opacity:0;transform:translateX(-14px);
+  transition:opacity .5s var(--ease),transform .5s var(--ease),background .2s,border-color .2s}
+.js .chat .msg.is-in{opacity:1;transform:none}
+
 @media (prefers-reduced-motion:reduce){
   *,*::before,*::after{animation-duration:.01ms !important;
     animation-iteration-count:1 !important;transition-duration:.01ms !important}
   .grain{display:none}
   html{scroll-behavior:auto}
+  .magnetic,.mchip,.gcard{transform:none !important}
 }

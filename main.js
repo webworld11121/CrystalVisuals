@@ -392,18 +392,43 @@
         try { localStorage.setItem('cv:on', JSON.stringify(on)); } catch (e) {}
       }
 
+      /* осколки для анимации закрытия */
+      var shardBox = $('#guiShards');
+      if (shardBox) {
+        var html = '';
+        for (var s = 0; s < 10; s++) {
+          var ang = (s / 10) * Math.PI * 2;
+          var dist = 180 + Math.random() * 220;
+          html += '<span class="shard" style="--dx:' +
+            Math.round(Math.cos(ang) * dist) + 'px;--dy:' +
+            Math.round(Math.sin(ang) * dist) + 'px;--dr:' +
+            Math.round((Math.random() * 720 - 360)) + 'deg;animation-delay:' +
+            (s * 22) + 'ms"></span>';
+        }
+        shardBox.innerHTML = html;
+      }
+
       /* открытие / закрытие */
       function openGui() {
         ov.hidden = false;
         document.body.style.overflow = 'hidden';
+        pan.classList.remove('is-break');
         Snd.open();
         paint();
       }
+
       function closeGui() {
-        ov.hidden = true;
-        document.body.style.overflow = '';
+        if (ov.hidden) return;
+        pan.classList.add('is-break');
         Snd.close();
         closePops();
+        setTimeout(function () {
+          ov.hidden = true;
+          pan.classList.remove('is-break');
+          pan.style.setProperty('--rx', '0deg');
+          pan.style.setProperty('--ry', '0deg');
+          document.body.style.overflow = '';
+        }, 560);
       }
       var openBtn = $('#openGui'), fab = $('#fab'), xBtn = $('#guiX');
       if (openBtn) openBtn.addEventListener('click', openGui);
@@ -530,7 +555,47 @@
             }
           });
 
+          /* наклон карточки за мышью */
+          c.addEventListener('mousemove', function (ev) {
+            var r = c.getBoundingClientRect();
+            var px = (ev.clientX - r.left) / r.width - .5;
+            var py = (ev.clientY - r.top) / r.height - .5;
+            c.style.setProperty('--cry', (px * 11).toFixed(2) + 'deg');
+            c.style.setProperty('--crx', (-py * 11).toFixed(2) + 'deg');
+            c.style.setProperty('--cs', '1.03');
+          });
+          c.addEventListener('mouseleave', function () {
+            c.style.setProperty('--cry', '0deg');
+            c.style.setProperty('--crx', '0deg');
+            c.style.setProperty('--cs', '1');
+          });
+
+          /* лесенка появления */
+          c.style.animationDelay = Math.min(list.indexOf(m) * 14, 420) + 'ms';
+
           gGrid.appendChild(c);
+        });
+      }
+
+      /* ---------- НАКЛОН ПАНЕЛИ ЗА МЫШЬЮ ---------- */
+      var glowBox = $('#guiGlow');
+      if (pan && !matchMedia('(prefers-reduced-motion: reduce)').matches) {
+        pan.addEventListener('mousemove', function (e) {
+          var r = pan.getBoundingClientRect();
+          var px = (e.clientX - r.left) / r.width - .5;
+          var py = (e.clientY - r.top) / r.height - .5;
+          pan.style.setProperty('--ry', (px * 9).toFixed(2) + 'deg');
+          pan.style.setProperty('--rx', (-py * 7).toFixed(2) + 'deg');
+          if (glowBox) {
+            glowBox.style.setProperty('--gx',
+              ((px + .5) * 100).toFixed(1) + '%');
+            glowBox.style.setProperty('--gy',
+              ((py + .5) * 100).toFixed(1) + '%');
+          }
+        });
+        pan.addEventListener('mouseleave', function () {
+          pan.style.setProperty('--ry', '0deg');
+          pan.style.setProperty('--rx', '0deg');
         });
       }
 
@@ -688,6 +753,129 @@
         if (e.key === 'Escape') shut();
         if (e.key === 'ArrowLeft') show(si - 1);
         if (e.key === 'ArrowRight') show(si + 1);
+      });
+    }
+
+    /* ============================================
+       АНИМАЦИИ
+       ============================================ */
+    var RMv = matchMedia('(prefers-reduced-motion: reduce)').matches;
+    document.documentElement.classList.add('js');
+
+    /* ---------- RIPPLE ОТ КЛИКА ---------- */
+    if (!RMv) {
+      $$('.btn, .fab, .guiPan__z, .guiPan__x, .mtab').forEach(function (b) {
+        b.addEventListener('click', function (e) {
+          var r = b.getBoundingClientRect();
+          var size = Math.max(r.width, r.height);
+          var s = document.createElement('span');
+          s.className = 'ripple';
+          s.style.width = s.style.height = size + 'px';
+          s.style.left = (e.clientX - r.left - size / 2) + 'px';
+          s.style.top = (e.clientY - r.top - size / 2) + 'px';
+          if (getComputedStyle(b).position === 'static') b.style.position = 'relative';
+          b.appendChild(s);
+          setTimeout(function () { s.remove(); }, 620);
+        });
+      });
+    }
+
+    /* ---------- МАГНИТНЫЕ КНОПКИ ---------- */
+    if (!RMv && matchMedia('(hover:hover)').matches) {
+      $$('.magnetic').forEach(function (b) {
+        b.addEventListener('mousemove', function (e) {
+          var r = b.getBoundingClientRect();
+          var x = (e.clientX - r.left - r.width / 2) * .22;
+          var y = (e.clientY - r.top - r.height / 2) * .3;
+          b.style.transform = 'translate(' + x.toFixed(1) + 'px,' + y.toFixed(1) + 'px) scale(1.03)';
+        });
+        b.addEventListener('mouseleave', function () { b.style.transform = ''; });
+      });
+
+      /* ---------- НАКЛОН КАРТОЧЕК МОДУЛЕЙ ---------- */
+      $$('.mchip').forEach(function (c) {
+        c.addEventListener('mousemove', function (e) {
+          var r = c.getBoundingClientRect();
+          var px = (e.clientX - r.left) / r.width - .5;
+          var py = (e.clientY - r.top) / r.height - .5;
+          c.style.setProperty('--try_', (px * 9).toFixed(2) + 'deg');
+          c.style.setProperty('--trx', (-py * 7).toFixed(2) + 'deg');
+          c.style.transform = 'translateY(-4px)';
+        });
+        c.addEventListener('mouseleave', function () {
+          c.style.setProperty('--try_', '0deg');
+          c.style.setProperty('--trx', '0deg');
+          c.style.transform = '';
+        });
+      });
+
+      /* ---------- ПЛИТКИ ЦЕНЫ И ШАГИ ---------- */
+      $$('.perk, .q, .trade').forEach(function (c) {
+        c.addEventListener('mousemove', function (e) {
+          var r = c.getBoundingClientRect();
+          var px = (e.clientX - r.left) / r.width - .5;
+          var py = (e.clientY - r.top) / r.height - .5;
+          c.style.setProperty('--try_', (px * 5).toFixed(2) + 'deg');
+          c.style.setProperty('--trx', (-py * 4).toFixed(2) + 'deg');
+        });
+        c.addEventListener('mouseleave', function () {
+          c.style.setProperty('--try_', '0deg');
+          c.style.setProperty('--trx', '0deg');
+        });
+      });
+    }
+
+    /* ---------- AURORA СЛЕДИТ ЗА МЫШЬЮ ---------- */
+    if (!RMv) {
+      var aur = $('.aurora');
+      var tx = 0, ty = 0, cx = 0, cy = 0;
+      addEventListener('mousemove', function (e) {
+        tx = (e.clientX / innerWidth - .5) * 26;
+        ty = (e.clientY / innerHeight - .5) * 18;
+      }, { passive: true });
+      (function loop() {
+        cx += (tx - cx) * .05;
+        cy += (ty - cy) * .05;
+        if (aur) {
+          aur.style.setProperty('--ax', cx.toFixed(2) + 'px');
+          aur.style.setProperty('--ay', cy.toFixed(2) + 'px');
+        }
+        requestAnimationFrame(loop);
+      })();
+    }
+
+    /* ---------- ПОЯВЛЕНИЕ БЛОКОВ ПРИ СКРОЛЛЕ ---------- */
+    if ('IntersectionObserver' in window) {
+      var groups = [
+        ['.hero__in > *', 0],
+        ['.stats .stat', 60],
+        ['.price .trade', 0],
+        ['.price__side .perk', 70],
+        ['.mbar', 0],
+        ['.mlist .mchip', 22],
+        ['.shots .shot', 80],
+        ['.quest .q', 70],
+        ['.chat .msg', 60]
+      ];
+
+      var ios = [];
+      groups.forEach(function (g) {
+        var sel = g[0], step = g[1];
+        var els = $$(sel);
+        if (!els.length) return;
+        els.forEach(function (el) {
+          if (sel.indexOf('.msg') === -1) el.classList.add('rv');
+        });
+        var ob = new IntersectionObserver(function (en, obs) {
+          en.forEach(function (e) {
+            if (!e.isIntersecting) return;
+            var i = els.indexOf(e.target);
+            setTimeout(function () { e.target.classList.add('is-in'); }, i * step);
+            obs.unobserve(e.target);
+          });
+        }, { threshold: .06, rootMargin: '0px 0px -40px' });
+        els.forEach(function (el) { ob.observe(el); });
+        ios.push(ob);
       });
     }
 
