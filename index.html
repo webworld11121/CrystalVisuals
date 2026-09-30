@@ -4,20 +4,22 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CrystalVisuals — лоадер для Minecraft</title>
-<meta name="description" content="CrystalVisuals — платный лоадер для Minecraft 1.21.11. 550 ₽ навсегда, доступ сразу после оплаты.">
+<meta name="description" content="CrystalVisuals — платный лоадер для Minecraft 1.21.11. Ambience, прозрачный интерфейс, 550 ₽ навсегда.">
 <meta property="og:title" content="CrystalVisuals">
-<meta property="og:description" content="Платный лоадер для Minecraft. 550 ₽ навсегда">
+<meta property="og:description" content="Прозрачный лоадер для Minecraft с ambience. 550 ₽ навсегда">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23141414'/><path d='M16 5l9 6v10l-9 6-9-6V11z' fill='%233ba55c'/></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%230a0714'/><path d='M16 5l9 6v10l-9 6-9-6V11z' fill='%238b5cf6'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
+<noscript><style>.reveal{opacity:1 !important;transform:none !important}</style></noscript>
 </head>
 <body>
 
-<div class="scanlines" aria-hidden="true"></div>
-<div class="vignette" aria-hidden="true"></div>
+<canvas class="sky" id="sky" aria-hidden="true"></canvas>
+<div class="aurora" aria-hidden="true"></div>
+<div class="grain" aria-hidden="true"></div>
 <div class="scrollbar" id="scrollBar" aria-hidden="true"></div>
 
 <a class="skip" href="#hero">К содержимому</a>
@@ -56,14 +58,14 @@
         <span class="tag tag--live"><i></i>v1.0.0</span>
         <span class="tag">1.21.11</span>
         <span class="tag">JAVA 21</span>
-        <span class="tag">LOADER</span>
+        <span class="tag">AMBIENCE</span>
       </div>
 
       <h1 class="hero__ttl reveal">CRYSTAL<br><em>VISUALS</em></h1>
 
       <p class="hero__lead reveal">
-        Лоадер, который сам всё ставит и запускает игру.
-        Девять модулей, один платёж, ноль подписок.
+        Прозрачный лоадер для Minecraft. Стеклянный интерфейс, живой
+        ambience и фиолетовое небо — игра выглядит как никогда.
       </p>
 
       <div class="hero__cta reveal">
@@ -73,23 +75,21 @@
         <a class="btn btn--ghost" href="#modules">СМОТРЕТЬ МОДУЛИ</a>
       </div>
 
-      <!-- Хотбар внизу — как в игре -->
       <div class="hotbar reveal" id="hotbar">
-        <div class="slot" data-n="FPS BOOSTER"></div>
+        <div class="slot" data-n="AMBIENCE"></div>
         <div class="slot" data-n="HUD"></div>
         <div class="slot" data-n="FULLBRIGHT"></div>
         <div class="slot" data-n="NAMETAGS"></div>
         <div class="slot is-sel" data-n="ESP"></div>
         <div class="slot" data-n="TRAJ"></div>
         <div class="slot" data-n="KILLFEED"></div>
-        <div class="slot" data-n="CLICKGUI"></div>
+        <div class="slot" data-n="GLASS UI"></div>
         <div class="slot" data-n="PROFILES"></div>
       </div>
     </div>
 
-    <!-- Консоль установки -->
     <div class="hero__r reveal">
-      <div class="gui win">
+      <div class="glass win">
         <div class="win__bar">
           <span class="win__dots"><i></i><i></i><i></i></span>
           <b>loader — install log</b>
@@ -113,7 +113,7 @@
   </div>
 </section>
 
-<!-- ═══════════ ТИКЕР ═══════════ -->
+<!-- ═══════════ TICKER ═══════════ -->
 <div class="ticker" aria-hidden="true"><div class="ticker__row" id="ticker"></div></div>
 
 <!-- ═══════════ ЦЕНА ═══════════ -->
@@ -126,8 +126,7 @@
     </div>
 
     <div class="price">
-      <!-- торговец -->
-      <div class="trade reveal">
+      <div class="glass trade reveal">
         <div class="trade__head">
           <span class="trade__face"></span>
           <div>
@@ -137,7 +136,7 @@
         </div>
 
         <div class="trade__slots">
-          <div class="tslot"><span class="item item--emerald"></span><em>лоадер</em></div>
+          <div class="tslot"><span class="item item--violet"></span><em>лоадер</em></div>
           <div class="tarrow">➜</div>
           <div class="tslot"><span class="item item--paper"></span><em>доступ</em></div>
         </div>
@@ -150,7 +149,7 @@
         <ul class="trade__list">
           <li>Лоадер и все 9 модулей</li>
           <li>Все будущие обновления — бесплатно</li>
-          <li>Установка в два клика</li>
+          <li>Прозрачное стеклянное GUI</li>
           <li>Закрытый Discord с поддержкой</li>
         </ul>
 
@@ -161,17 +160,17 @@
       </div>
 
       <div class="price__side">
-        <div class="perk reveal"><b>БЕЗ ПОДПИСКИ</b><span>один платёж, автосписаний нет</span></div>
-        <div class="perk reveal"><b>ОБНОВЛЕНИЯ БЕСПЛАТНО</b><span>новая версия — просто качаешь</span></div>
-        <div class="perk reveal"><b>ПОДДЕРЖКА 24/7</b><span>закрытый Discord-сервер</span></div>
-        <div class="perk reveal"><b>ДОСТУП СРАЗУ</b><span>в течение пары минут после оплаты</span></div>
+        <div class="glass perk reveal"><b>БЕЗ ПОДПИСКИ</b><span>один платёж, автосписаний нет</span></div>
+        <div class="glass perk reveal"><b>ОБНОВЛЕНИЯ БЕСПЛАТНО</b><span>новая версия — просто качаешь</span></div>
+        <div class="glass perk reveal"><b>ПОДДЕРЖКА 24/7</b><span>закрытый Discord-сервер</span></div>
+        <div class="glass perk reveal"><b>ДОСТУП СРАЗУ</b><span>в течение пары минут после оплаты</span></div>
       </div>
     </div>
   </div>
 </section>
 
-<!-- ═══════════ МОДУЛИ (инвентарь) ═══════════ -->
-<section class="sect sect--alt" id="modules">
+<!-- ═══════════ МОДУЛИ ═══════════ -->
+<section class="sect" id="modules">
   <div class="wrap">
     <div class="head reveal">
       <span class="kick">02 / МОДУЛИ</span>
@@ -179,10 +178,22 @@
       <p class="lead">Каждый модуль включается отдельной клавишей и пишется в профиль.</p>
     </div>
 
-    <div class="inv">
-      <div class="inv__row reveal"><span class="islot" data-t="FPS BOOSTER — режет лишний рендер, +40% FPS"></span><span class="islot" data-t="HUD — показывает FPS, пинг, координаты, таймер"></span><span class="islot" data-t="FULLBRIGHT — полная яркость ночью и в пещерах"></span></div>
-      <div class="inv__row reveal"><span class="islot" data-t="NAMETAGS — ники, дистанция, HP сквозь стены"></span><span class="islot is-sel" data-t="ESP — подсветка сущностей и контейнеров"></span><span class="islot" data-t="TRAJECTORIES — траектории гранат и стрел"></span></div>
-      <div class="inv__row reveal"><span class="islot" data-t="KILLFEED — кто кого убил, с интервалом"></span><span class="islot" data-t="CLICKGUI FX — анимации открытия меню"></span><span class="islot" data-t="PROFILES — свои наборы модулей на каждый сервер"></span></div>
+    <div class="inv reveal">
+      <div class="inv__row">
+        <div class="islot" data-t="FPS BOOSTER — режет лишний рендер, +40% FPS"></div>
+        <div class="islot" data-t="HUD — FPS, пинг, координаты, таймер"></div>
+        <div class="islot" data-t="FULLBRIGHT — полная яркость ночью и в пещерах"></div>
+      </div>
+      <div class="inv__row">
+        <div class="islot" data-t="NAMETAGS — ники, дистанция, HP сквозь стены"></div>
+        <div class="islot is-sel" data-t="AMBIENCE — живое небо, туман, свечение"></div>
+        <div class="islot" data-t="ESP — подсветка сущностей и контейнеров"></div>
+      </div>
+      <div class="inv__row">
+        <div class="islot" data-t="TRAJECTORIES — траектории гранат и стрел"></div>
+        <div class="islot" data-t="GLASS UI — полностью прозрачное меню"></div>
+        <div class="islot" data-t="PROFILES — свои наборы модулей на сервер"></div>
+      </div>
     </div>
 
     <div class="hintline reveal">наведи на слот — увидишь описание</div>
@@ -199,24 +210,35 @@
     </div>
 
     <div class="shots">
-      <figure class="shot reveal" data-img="assets/img/shot-1.png" data-title="Главное меню">
-        <div class="gui shot__win"><div class="shot__img img1"></div></div>
+      <figure class="shot reveal" data-img="shot-1.png" data-title="Главное меню">
+        <div class="glass shot__win">
+          <div class="win__bar"><span class="win__dots"><i></i><i></i><i></i></span><b>modules</b></div>
+          <img class="shot__img" src="shot-1.png" alt="Главное меню CrystalVisuals" loading="lazy">
+        </div>
         <figcaption>Главное меню</figcaption>
       </figure>
-      <figure class="shot reveal" data-img="assets/img/shot-2.png" data-title="HUD в игре">
-        <div class="gui shot__win"><div class="shot__img img2"></div></div>
-        <figcaption>В игре</figcaption>
+
+      <figure class="shot reveal" data-img="shot-2.png" data-title="Ambience">
+        <div class="glass shot__win">
+          <div class="win__bar"><span class="win__dots"><i></i><i></i><i></i></span><b>visuals</b></div>
+          <img class="shot__img" src="shot-2.png" alt="Ambience" loading="lazy">
+        </div>
+        <figcaption>Ambience и небо</figcaption>
       </figure>
-      <figure class="shot reveal" data-img="assets/img/shot-3.png" data-title="Настройки">
-        <div class="gui shot__win"><div class="shot__img img3"></div></div>
-        <figcaption>Настройки</figcaption>
+
+      <figure class="shot reveal" data-img="shot-3.png" data-title="Темы">
+        <div class="glass shot__win">
+          <div class="win__bar"><span class="win__dots"><i></i><i></i><i></i></span><b>themes</b></div>
+          <img class="shot__img" src="shot-3.png" alt="Темы оформления" loading="lazy">
+        </div>
+        <figcaption>Темы оформления</figcaption>
       </figure>
     </div>
   </div>
 </section>
 
 <!-- ═══════════ КАК ПОЛУЧИТЬ ═══════════ -->
-<section class="sect sect--alt" id="how">
+<section class="sect" id="how">
   <div class="wrap">
     <div class="head reveal">
       <span class="kick">04 / ПОКУПКА</span>
@@ -224,19 +246,19 @@
     </div>
 
     <ol class="quest">
-      <li class="q reveal">
+      <li class="glass q reveal">
         <span class="q__n">1</span>
         <div><b>ОПЛАТИ 550 ₽</b><p>Жми кнопку, попадёшь в Discord, выбери способ оплаты.</p></div>
       </li>
-      <li class="q reveal">
+      <li class="glass q reveal">
         <span class="q__n">2</span>
         <div><b>ПОЛУЧИ РОЛЬ</b><p>Бот выдаёт доступ, в канале <code>#download</code> появляется ссылка.</p></div>
       </li>
-      <li class="q reveal">
+      <li class="glass q reveal">
         <span class="q__n">3</span>
         <div><b>ЗАПУСТИ ЛОАДЕР</b><p>Скачай файл, запусти, выбери версию Minecraft — дальше он сам.</p></div>
       </li>
-      <li class="q reveal">
+      <li class="glass q reveal">
         <span class="q__n">4</span>
         <div><b>ИГРАЙ</b><p>Меню на <kbd>R</kbd>, настройки сохраняются в профиле.</p></div>
       </li>
@@ -248,7 +270,7 @@
   </div>
 </section>
 
-<!-- ═══════════ FAQ (чат) ═══════════ -->
+<!-- ═══════════ FAQ ═══════════ -->
 <section class="sect" id="faq">
   <div class="wrap wrap--narrow">
     <div class="head reveal">
@@ -266,8 +288,8 @@
         <p>Да, и они бесплатные. Новая версия просто появится в Discord.</p>
       </details>
       <details class="msg reveal">
-        <summary><span class="msg__who">ТЫ</span> Это работает на серверах?</summary>
-        <p>Модули видны только тебе, на серверной стороне ничего не меняется.</p>
+        <summary><span class="msg__who">ТЫ</span> Он же видно другим игрокам?</summary>
+        <p>Нет. Всё рисуется только у тебя на экране, на сервере ничего не меняется.</p>
       </details>
       <details class="msg reveal">
         <summary><span class="msg__who">ТЫ</span> Если что-то сломается?</summary>
@@ -299,16 +321,16 @@
   </div>
 </footer>
 
-<!-- ═══════════ ИГРОВОЕ МЕНЮ НА R ═══════════ -->
+<!-- ═══════════ МЕНЮ НА R ═══════════ -->
 <button class="keyhint" id="cvOpen" type="button" aria-haspopup="dialog">
   <kbd>R</kbd> МЕНЮ
 </button>
 
 <div class="mcgui" id="mcgui" hidden role="dialog" aria-modal="true" aria-label="CrystalVisuals">
   <div class="mcgui__bg" data-close></div>
-  <div class="mcgui__panel">
+  <div class="glass mcgui__panel">
     <div class="mcgui__top">
-      <span class="mcgui__gem"></span>
+      <span class="logo__gem"></span>
       <b>CRYSTALVISUALS</b>
       <span class="mcgui__v">v1.0.0</span>
     </div>
@@ -317,14 +339,14 @@
       <span>ВКЛ: <b id="mcCount">0</b>/9</span>
     </div>
     <div class="mcgui__grid" id="mcGrid">
+      <button class="mcb" type="button">AMBIENCE<em>OFF</em></button>
       <button class="mcb" type="button">FPS BOOSTER<em>OFF</em></button>
       <button class="mcb" type="button">HUD<em>OFF</em></button>
       <button class="mcb" type="button">FULLBRIGHT<em>OFF</em></button>
       <button class="mcb" type="button">NAMETAGS<em>OFF</em></button>
       <button class="mcb" type="button">ESP<em>OFF</em></button>
       <button class="mcb" type="button">TRAJECTORIES<em>OFF</em></button>
-      <button class="mcb" type="button">KILLFEED<em>OFF</em></button>
-      <button class="mcb" type="button">CLICKGUI FX<em>OFF</em></button>
+      <button class="mcb" type="button">GLASS UI<em>OFF</em></button>
       <button class="mcb" type="button">PROFILES<em>OFF</em></button>
     </div>
   </div>
@@ -332,7 +354,7 @@
 
 <!-- ═══════════ ПЕРЕХОД В DISCORD ═══════════ -->
 <div class="redir" id="redir" hidden>
-  <div class="gui redir__box">
+  <div class="glass redir__box">
     <div class="win__bar">
       <span class="win__dots"><i></i><i></i><i></i></span>
       <b>redirect</b>
