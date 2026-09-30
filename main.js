@@ -7,23 +7,23 @@
   var $  = function (s, c) { return (c || document).querySelector(s); };
   var $$ = function (s, c) { return [].slice.call((c || document).querySelectorAll(s)); };
 
-  // страховка: если что-то упадёт — всё равно покажем контент
+  // страховка: даже если что-то сломается — контент покажем
   setTimeout(function () {
     $$('.reveal').forEach(function (e) { e.classList.add('is-in'); });
   }, 2600);
 
   try {
-
     document.documentElement.classList.add('js');
+    var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
 
     var yEl = $('#year');
     if (yEl) yEl.textContent = new Date().getFullYear();
 
-    /* ─── ФИОЛЕТОВОЕ НЕБО (CANVAS) ─── */
+    /* ─── ФИОЛЕТОВОЕ НЕБО ─── */
     (function sky() {
       var cv = document.getElementById('sky');
       if (!cv) return;
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) { cv.style.display = 'none'; return; }
+      if (RM) { cv.style.display = 'none'; return; }
 
       var ctx = cv.getContext('2d');
       var w, h, dpr, stars = [], motes = [], raf;
@@ -36,50 +36,46 @@
         cv.style.height = innerHeight + 'px';
 
         stars = [];
-        var ns = Math.round(innerWidth * innerHeight / 9000);
+        var ns = Math.round(innerWidth * innerHeight / 8000);
         for (var i = 0; i < ns; i++) {
           stars.push({
-            x: Math.random() * w,
-            y: Math.random() * h * 0.75,
-            r: (Math.random() * 1.5 + 0.4) * dpr,
-            a: Math.random() * 0.7 + 0.15,
-            tw: Math.random() * 0.02 + 0.004
+            x: Math.random() * w, y: Math.random() * h * 0.8,
+            r: (Math.random() * 1.4 + 0.4) * dpr,
+            a: Math.random() * 0.55 + 0.12,
+            tw: (Math.random() * 0.018 + 0.004) * (Math.random() < .5 ? -1 : 1)
           });
         }
 
         motes = [];
-        var nm = Math.min(46, Math.round(innerWidth / 30));
+        var nm = Math.min(44, Math.round(innerWidth / 32));
         for (var j = 0; j < nm; j++) {
           motes.push({
-            x: Math.random() * w,
-            y: Math.random() * h,
-            r: (Math.random() * 2.4 + 1) * dpr,
-            vx: (Math.random() - 0.5) * 0.16 * dpr,
-            vy: -(Math.random() * 0.22 + 0.05) * dpr,
-            o: Math.random() * 0.35 + 0.1
+            x: Math.random() * w, y: Math.random() * h,
+            r: (Math.random() * 2.2 + 0.9) * dpr,
+            vx: (Math.random() - 0.5) * 0.14 * dpr,
+            vy: -(Math.random() * 0.2 + 0.04) * dpr,
+            o: Math.random() * 0.32 + 0.08,
+            c: Math.random() < 0.5 ? '167,139,250' : '61,77,255'
           });
         }
       }
 
       function frame() {
-        // градиентное небо
         var g = ctx.createLinearGradient(0, 0, 0, h);
-        g.addColorStop(0, 'rgba(24,12,58,0.85)');
-        g.addColorStop(0.45, 'rgba(12,7,28,0.7)');
-        g.addColorStop(1, 'rgba(5,3,14,0.9)');
+        g.addColorStop(0, 'rgba(16,12,44,0.9)');
+        g.addColorStop(0.5, 'rgba(10,10,30,0.75)');
+        g.addColorStop(1, 'rgba(6,6,20,0.95)');
         ctx.fillStyle = g;
         ctx.fillRect(0, 0, w, h);
 
-        // звёзды
         for (var i = 0; i < stars.length; i++) {
           var s = stars[i];
           s.a += s.tw;
-          if (s.a > 0.9 || s.a < 0.1) s.tw = -s.tw;
-          ctx.fillStyle = 'rgba(216,200,255,' + s.a + ')';
+          if (s.a > 0.8 || s.a < 0.08) s.tw = -s.tw;
+          ctx.fillStyle = 'rgba(214,205,255,' + s.a + ')';
           ctx.fillRect(s.x, s.y, s.r, s.r);
         }
 
-        // парящие пылинки
         for (var j = 0; j < motes.length; j++) {
           var m = motes[j];
           m.x += m.vx; m.y += m.vy;
@@ -88,9 +84,9 @@
           if (m.x > w + 20) m.x = -20;
           ctx.beginPath();
           ctx.arc(m.x, m.y, m.r, 0, 6.2832);
-          ctx.fillStyle = 'rgba(192,132,252,' + m.o + ')';
-          ctx.shadowBlur = 12 * dpr;
-          ctx.shadowColor = 'rgba(139,92,246,0.9)';
+          ctx.fillStyle = 'rgba(' + m.c + ',' + m.o + ')';
+          ctx.shadowBlur = 14 * dpr;
+          ctx.shadowColor = 'rgba(123,92,255,0.9)';
           ctx.fill();
         }
         ctx.shadowBlur = 0;
@@ -102,8 +98,7 @@
         else raf = requestAnimationFrame(frame);
       });
 
-      size();
-      frame();
+      size(); frame();
       addEventListener('resize', size);
     })();
 
@@ -124,8 +119,7 @@
     var bg = $('#burger'), nav = $('#nav');
     if (bg && nav) {
       var closeNav = function () {
-        nav.classList.remove('is-on');
-        bg.classList.remove('is-x');
+        nav.classList.remove('is-on'); bg.classList.remove('is-x');
         bg.setAttribute('aria-expanded', 'false');
         document.body.style.overflow = '';
       };
@@ -156,13 +150,12 @@
 
     /* ─── COUNTERS ─── */
     if ('IntersectionObserver' in window) {
-      var RM = matchMedia('(prefers-reduced-motion: reduce)').matches;
       var cnt = new IntersectionObserver(function (en, ob) {
         en.forEach(function (e) {
           if (!e.isIntersecting) return;
           var el = e.target, end = +el.dataset.count || 0;
           if (RM) { el.textContent = end; ob.unobserve(el); return; }
-          var t0 = performance.now(), dur = 1100;
+          var t0 = performance.now(), dur = 1200;
           (function tick(now) {
             var p = Math.min((now - t0) / dur, 1);
             el.textContent = Math.round(end * (1 - Math.pow(1 - p, 3)));
@@ -194,45 +187,35 @@
     /* ─── TICKER ─── */
     var tk = $('#ticker');
     if (tk) {
-      var chunk = '550 ₽ НАВСЕГДА<span>◆</span>ПРОЗРАЧНЫЙ GUI<span>◆</span>MINECRAFT 1.21.11<span>◆</span>' +
-                  '9 МОДУЛЕЙ<span>◆</span>AMBIENCE<span>◆</span>БЕЗ ПОДПИСКИ<span>◆</span>';
+      var chunk = '82 МОДУЛЯ<span>◆</span>GLASS UI<span>◆</span>MINECRAFT 1.21.11<span>◆</span>' +
+                  'AMBIENCE<span>◆</span>550 ₽ НАВСЕГДА<span>◆</span>БЕЗ ПОДПИСКИ<span>◆</span>';
       var t = '';
       for (var i = 0; i < 6; i++) t += chunk;
       tk.innerHTML = t;
     }
 
-    /* ─── CONSOLE TYPING ─── */
-    var out = $('#console'), timeOut = $('#statTime'), statOk = $('#statOk');
-    var LINES = [
-      '<b>[loader]</b> crystalvisuals <span class="g">v1.0.0</span>',
-      '<b>[loader]</b> target  <span class="y">minecraft 1.21.11</span>',
-      '<b>[java ]</b> runtime <span class="d">21</span> — ok',
-      '<b>[deps ]</b> fetch fabric-api... <span class="g">done</span>',
-      '<b>[mods ]</b> ambience      <span class="g">loaded</span>',
-      '<b>[ui   ]</b> glass shader   <span class="g">loaded</span>',
-      '<b>[cfg  ]</b> profile <span class="d">default</span>',
-      '<b>[gui  ]</b> press <span class="y">R</span> to open menu',
-      '<span class="g">[ ok  ]</span> ready — enjoy'
-    ];
-    if (out) {
-      if (matchMedia('(prefers-reduced-motion: reduce)').matches) {
-        out.innerHTML = LINES.join('\n');
-        if (timeOut) timeOut.textContent = '0.0s';
-      } else {
-        var li = 0, ci = 0, t0 = performance.now();
-        (function type() {
-          if (li >= LINES.length) { if (statOk) statOk.textContent = 'ГОТОВО'; return; }
-          var line = LINES[li];
-          ci += 1;
-          out.innerHTML = LINES.slice(0, li).join('\n') +
-            (li > 0 ? '\n' : '') + line.slice(0, ci);
-          if (ci >= line.length) { li++; ci = 0; }
-          setTimeout(type, ci === 0 ? 170 : 12);
-        })();
-        setTimeout(function () {
-          if (timeOut) timeOut.textContent = ((performance.now() - t0) / 1000).toFixed(1) + 's';
-        }, 2000);
-      }
+    /* ─── МАКЕТ GUI: переключение категорий ─── */
+    var side = $('#mockSide');
+    if (side) {
+      var art = $('#mockArt'), nm = $('#mockName'), ct = $('#mockCount');
+      var cats = $$('.cat', side);
+
+      cats.forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          cats.forEach(function (b) { b.classList.remove('is-act'); });
+          btn.classList.add('is-act');
+          if (nm) nm.textContent = btn.dataset.cat;
+          if (ct) {
+            var n = +btn.dataset.n || 0;
+            ct.textContent = n ? n + ' мод.' : '—';
+          }
+        });
+      });
+
+      // если нашёл картинку котика — подставим
+      var img = new Image();
+      img.onload = function () { if (art) art.classList.add('has-img'); };
+      img.src = 'cat.png';
     }
 
     /* ─── TOAST ─── */
@@ -269,17 +252,6 @@
         }, 110);
       });
     });
-
-    /* ─── HOTBAR ─── */
-    var hb = $('#hotbar');
-    if (hb) {
-      $$('.slot', hb).forEach(function (s) {
-        s.addEventListener('click', function () {
-          $$('.slot', hb).forEach(function (x) { x.classList.remove('is-sel'); });
-          s.classList.add('is-sel');
-        });
-      });
-    }
 
     /* ─── МЕНЮ НА R ─── */
     var KEY = 'cv:modules';
@@ -342,9 +314,7 @@
         lbImg.alt = shots[cur].dataset.title || '';
         if (lbT) lbT.textContent = shots[cur].dataset.title || '';
       }
-      function openLb(i) {
-        show(i); lb.hidden = false; document.body.style.overflow = 'hidden';
-      }
+      function openLb(i) { show(i); lb.hidden = false; document.body.style.overflow = 'hidden'; }
       function closeLb() { lb.hidden = true; lbImg.src = ''; document.body.style.overflow = ''; }
 
       shots.forEach(function (s, i) {
@@ -368,7 +338,6 @@
     }
 
   } catch (err) {
-    // любая ошибка — просто показываем весь контент
     console.error(err);
     $$('.reveal').forEach(function (e) { e.classList.add('is-in'); });
   }
