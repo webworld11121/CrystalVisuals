@@ -390,4 +390,54 @@ kbd{background:rgba(139,92,246,.16);border:1px solid var(--line2);padding:2px 7p
 .lbox__x{position:absolute;top:14px;right:20px;background:none;border:0;color:var(--txt);
   font-size:2.2rem;cursor:pointer;line-height:1;opacity:.6}
 .lbox__x:hover{opacity:1;color:var(--v3)}
-.lbox__n{width:44px;height:44px;flex-shrink:0;cursor:pointer;font
+.lbox__n{width:44px;height:44px;flex-shrink:0;cursor:pointer;font-size:1.5rem;
+  background:rgba(139,92,246,.14);border:1px solid var(--line2);color:var(--txt);
+  backdrop-filter:blur(12px)}
+.lbox__n:hover{background:rgba(167,139,250,.3)}
+
+/* ── TOAST ── */
+.toast{
+  position:fixed;left:50%;bottom:70px;transform:translate(-50%,16px);z-index:410;
+  padding:11px 20px;background:rgba(14,10,26,.95);border:1px solid var(--v3);
+  backdrop-filter:blur(16px);box-shadow:0 16px 40px -18px #000;
+  font-size:.78rem;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s
+}
+.toast.is-on{opacity:1;transform:translate(-50%,0)}
+
+/* ── REVEAL: прячем только когда JS точно работает ── */
+.js .reveal{opacity:0;transform:translateY(16px);transition:opacity .5s steps(6),transform .5s steps(6)}
+.js .reveal.is-in{opacity:1;transform:none}
+
+/* ── ADAPTIVE ── */
+@media (max-width:960px){
+  .hero__grid{grid-template-columns:1fr;gap:34px}
+  .price{grid-template-columns:1fr}
+  .inv{max-width:none}
+}
+@media (max-width:760px){
+  html{scroll-padding-top:70px}
+  .nav{position:fixed;inset:0;z-index:-1;flex-direction:column;align-items:stretch;gap:2px;
+    padding:76px 20px 30px;background:rgba(7,5,15,.98);
+    border-bottom:1px solid var(--line2);transform:translateY(-102%);transition:transform .25s}
+  .nav.is-on{transform:none}
+  .nav a{padding:14px;font-size:.85rem}
+  .nav__cta{margin:8px 0 0;text-align:center}
+  .burger{display:block;position:relative;z-index:2}
+  .stats__in{grid-template-columns:repeat(2,1fr)}
+  .stat:nth-child(3){border-left:0}
+  .stat:nth-child(-n+2){border-bottom:1px solid var(--line)}
+  .hotbar{grid-template-columns:repeat(5,1fr)}
+  .mcgui__grid{grid-template-columns:1fr}
+  .lbox__n{position:absolute;top:50%;transform:translateY(-50%)}
+  .lbox__n--p{left:8px}
+  .lbox__n--x{right:8px}
+  .ftr__in{flex-direction:column;align-items:flex-start}
+  .inv__row{grid-template-columns:1fr 1fr}
+}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:.01ms !important;animation-iteration-count:1 !important;transition-duration:.01ms !important}
+  .js .reveal{opacity:1;transform:none}
+  .grain{display:none}
+  html{scroll-behavior:auto}
+}
