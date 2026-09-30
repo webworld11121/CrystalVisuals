@@ -3,42 +3,40 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CrystalVisuals — Minecraft Client</title>
-<meta name="description" content="CrystalVisuals — Fabric клиент для Minecraft 1.21.11. Скачать, установка, фичи, changelog.">
+<title>CrystalVisuals — лоадер для Minecraft</title>
+<meta name="description" content="CrystalVisuals — платный лоадер для Minecraft 1.21.11. 550 ₽ навсегда, доступ сразу после оплаты.">
 <meta property="og:title" content="CrystalVisuals">
-<meta property="og:description" content="Fabric клиент для Minecraft 1.21.11">
+<meta property="og:description" content="Платный лоадер для Minecraft. 550 ₽ навсегда">
 <meta property="og:type" content="website">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>&#9670;</text></svg>">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' fill='%23141414'/><path d='M16 5l9 6v10l-9 6-9-6V11z' fill='%233ba55c'/></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-<!-- фон -->
-<canvas class="bg-canvas" id="bgCanvas" aria-hidden="true"></canvas>
-<div class="bg-glow" aria-hidden="true"></div>
-<div class="bg-grid" aria-hidden="true"></div>
-<div class="bg-scan" aria-hidden="true"></div>
-<div class="scroll-progress" id="scrollBar" aria-hidden="true"></div>
+<div class="scanlines" aria-hidden="true"></div>
+<div class="vignette" aria-hidden="true"></div>
+<div class="scrollbar" id="scrollBar" aria-hidden="true"></div>
 
 <a class="skip" href="#hero">К содержимому</a>
 
-<!-- ================= HEADER ================= -->
-<header class="header" id="header">
-  <div class="wrap header__inner">
+<!-- ═══════════ HEADER ═══════════ -->
+<header class="hdr" id="hdr">
+  <div class="wrap hdr__in">
     <a class="logo" href="#hero">
-      <span class="logo__cube" aria-hidden="true"></span>
-      <span class="logo__text">Crystal<b>Visuals</b></span>
+      <span class="logo__gem" aria-hidden="true"></span>
+      <span class="logo__txt">CRYSTAL<span>VISUALS</span></span>
     </a>
 
     <nav class="nav" id="nav">
-      <a href="#features">Фичи</a>
+      <a href="#price">Цена</a>
+      <a href="#modules">Модули</a>
       <a href="#shots">Скриншоты</a>
-      <a href="#install">Установка</a>
-      <a href="#changelog">Changelog</a>
-      <a class="nav__dl" href="#download">Скачать</a>
+      <a href="#how">Как получить</a>
+      <a href="#faq">Вопросы</a>
+      <a class="nav__cta" href="https://discord.gg/d2vfVYmAX" target="_blank" rel="noopener" data-buy>Купить</a>
     </nav>
 
     <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">
@@ -49,258 +47,307 @@
 
 <main>
 
-<!-- ================= HERO ================= -->
+<!-- ═══════════ HERO ═══════════ -->
 <section class="hero" id="hero">
-  <div class="wrap hero__inner">
+  <div class="wrap hero__grid">
 
-    <div class="badges reveal">
-      <span class="badge badge--live"><i></i> v1.0.0</span>
-      <span class="badge">Fabric</span>
-      <span class="badge">1.21.11</span>
-      <span class="badge">Java 21</span>
+    <div class="hero__l">
+      <div class="tags reveal">
+        <span class="tag tag--live"><i></i>v1.0.0</span>
+        <span class="tag">1.21.11</span>
+        <span class="tag">JAVA 21</span>
+        <span class="tag">LOADER</span>
+      </div>
+
+      <h1 class="hero__ttl reveal">CRYSTAL<br><em>VISUALS</em></h1>
+
+      <p class="hero__lead reveal">
+        Лоадер, который сам всё ставит и запускает игру.
+        Девять модулей, один платёж, ноль подписок.
+      </p>
+
+      <div class="hero__cta reveal">
+        <a class="btn btn--buy" href="https://discord.gg/d2vfVYmAX" target="_blank" rel="noopener" data-buy>
+          КУПИТЬ ЗА 550 ₽
+        </a>
+        <a class="btn btn--ghost" href="#modules">СМОТРЕТЬ МОДУЛИ</a>
+      </div>
+
+      <!-- Хотбар внизу — как в игре -->
+      <div class="hotbar reveal" id="hotbar">
+        <div class="slot" data-n="FPS BOOSTER"></div>
+        <div class="slot" data-n="HUD"></div>
+        <div class="slot" data-n="FULLBRIGHT"></div>
+        <div class="slot" data-n="NAMETAGS"></div>
+        <div class="slot is-sel" data-n="ESP"></div>
+        <div class="slot" data-n="TRAJ"></div>
+        <div class="slot" data-n="KILLFEED"></div>
+        <div class="slot" data-n="CLICKGUI"></div>
+        <div class="slot" data-n="PROFILES"></div>
+      </div>
     </div>
 
-    <h1 class="hero__title reveal">
-      <span class="glitch" data-text="CrystalVisuals">CrystalVisuals</span>
-    </h1>
-
-    <p class="hero__lead reveal" id="heroLead">
-      <!-- TODO: замени на реальное описание клиента, 1–2 предложения -->
-      Fabric-клиент для Minecraft 1.21.11. Оптимизация, визуалы и качество жизни —
-      всё в одном лёгком клиенте.
-    </p>
-
-    <div class="hero__actions reveal">
-      <!-- TODO: поменяй ссылку на свой GitHub Releases -->
-      <a class="btn btn--primary magnetic" href="#download">
-        <span>Скачать .jar</span>
-      </a>
-      <a class="btn btn--ghost" href="#install">Как установить</a>
-    </div>
-
-    <div class="hero__stats reveal">
-      <div class="stat"><b data-count="60">0</b><span>FPS</span></div>
-      <div class="stat"><b data-count="12">0</b><span>модулей</span></div>
-      <div class="stat"><b data-count="4">0</b><span>конфига</span></div>
-      <div class="stat"><b data-count="100">0</b><span>% без лаг</span></div>
-    </div>
-  </div>
-
-  <div class="hero__cube" aria-hidden="true"></div>
-</section>
-
-<!-- бегущая строка -->
-<div class="marquee" aria-hidden="true">
-  <div class="marquee__row" id="marquee">
-    <span>Fabric</span><span>◆</span><span>1.21.11</span><span>◆</span>
-    <span>Module System</span><span>◆</span><span>Keybinds</span><span>◆</span>
-    <span>Profiles</span><span>◆</span><span>Java 21</span><span>◆</span>
-  </div>
-</div>
-
-<!-- ================= DOWNLOAD ================= -->
-<section class="section section--alt" id="download">
-  <div class="wrap">
-    <header class="section__head">
-      <span class="kicker reveal">01 / Загрузка</span>
-      <h2 class="reveal">Скачать CrystalVisuals</h2>
-      <p class="reveal">Нужны Fabric Loader и Fabric API — без них клиент не запустится.</p>
-    </header>
-
-    <div class="dl reveal">
-      <!-- TODO: вставь реальные ссылки -->
-      <a class="dl__card dl__card--main magnetic" href="https://github.com/webworld11121/CrystalVisuals/releases" target="_blank" rel="noopener">
-        <div class="dl__icon">⬇</div>
-        <div>
-          <b>CrystalVisuals v1.0.0</b>
-          <span>Fabric · 1.21.11 · Java 21</span>
+    <!-- Консоль установки -->
+    <div class="hero__r reveal">
+      <div class="gui win">
+        <div class="win__bar">
+          <span class="win__dots"><i></i><i></i><i></i></span>
+          <b>loader — install log</b>
         </div>
-        <div class="dl__size">~2.4 MB</div>
-      </a>
-
-      <a class="dl__card" href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">
-        <div class="dl__icon">⬇</div>
-        <div><b>Fabric Loader</b><span>Обязательная зависимость</span></div>
-      </a>
-
-      <a class="dl__card" href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">
-        <div class="dl__icon">⬇</div>
-        <div><b>Fabric API</b><span>Обязательная зависимость</span></div>
-      </a>
-    </div>
-
-    <!-- строка копирования -->
-    <div class="copybar reveal">
-      <code id="copyCmd">java -jar fabric-installer.jar</code>
-      <button class="copybar__btn" id="copyBtn" type="button">Копировать</button>
-    </div>
-  </div>
-</section>
-
-<!-- ================= FEATURES ================= -->
-<section class="section" id="features">
-  <div class="wrap">
-    <header class="section__head">
-      <span class="kicker reveal">02 / Возможности</span>
-      <h2 class="reveal">Фичи клиента</h2>
-      <p class="reveal">Всё выключается по отдельности, ничего не ломает ваниллу.</p>
-    </header>
-
-    <div class="grid">
-      <!-- TODO: замени карточки на реальные модули клиента -->
-      <article class="card tilt reveal">
-        <div class="card__glow"></div>
-        <div class="card__icon">◈</div>
-        <h3>Module System</h3>
-        <p>Модули включаются по одной клавише и сохраняются в профили.</p>
-        <span class="card__tag">Ядро</span>
-      </article>
-
-      <article class="card tilt reveal">
-        <div class="card__glow"></div>
-        <div class="card__icon">▣</div>
-        <h3>FPS Booster</h3>
-        <p>Убирает лишний рендер, отключает анимации и разные мелочи.</p>
-        <span class="card__tag">Performance</span>
-      </article>
-
-      <article class="card tilt reveal">
-        <div class="card__glow"></div>
-        <div class="card__icon">✦</div>
-        <h3>Визуалы</h3>
-        <p>Свечение, блеск, кастомный GUI и анимации.</p>
-        <span class="card__tag">Visuals</span>
-      </article>
-
-      <article class="card tilt reveal">
-        <div class="card__glow"></div>
-        <div class="card__icon">⌘</div>
-        <h3>Keybinds</h3>
-        <p>Полная перенастройка биндов под себя, конфликты не ломаются.</p>
-        <span class="card__tag">UI</span>
-      </article>
-    </div>
-  </div>
-</section>
-
-<!-- ================= SCREENSHOTS ================= -->
-<section class="section section--alt" id="shots">
-  <div class="wrap">
-    <header class="section__head">
-      <span class="kicker reveal">03 / Галерея</span>
-      <h2 class="reveal">Скриншоты</h2>
-      <p class="reveal">Клик по картинке — просмотр во весь экран.</p>
-    </header>
-
-    <div class="shots" id="shots">
-      <!-- TODO: положи свои скриншоты в assets/img/ (shot-1.png и т.д.)
-           Если файла нет — покажется градиент, ничего не сломается. -->
-      <figure class="shot reveal" data-img="assets/img/shot-1.png" data-title="Основной GUI">
-        <div class="shot__img s1"></div><figcaption>Основной GUI</figcaption>
-      </figure>
-      <figure class="shot reveal" data-img="assets/img/shot-2.png" data-title="Настройки модулей">
-        <div class="shot__img s2"></div><figcaption>Настройки</figcaption>
-      </figure>
-      <figure class="shot reveal" data-img="assets/img/shot-3.png" data-title="FPS / Performance">
-        <div class="shot__img s3"></div><figcaption>Performance</figcaption>
-      </figure>
-      <figure class="shot reveal" data-img="assets/img/shot-4.png" data-title="Визуалы">
-        <div class="shot__img s4"></div><figcaption>Визуалы</figcaption>
-      </figure>
-    </div>
-  </div>
-</section>
-
-<!-- ================= INSTALL ================= -->
-<section class="section" id="install">
-  <div class="wrap">
-    <header class="section__head">
-      <span class="kicker reveal">04 / Гайд</span>
-      <h2 class="reveal">Установка за 3 минуты</h2>
-    </header>
-
-    <ol class="steps">
-      <li class="step reveal">
-        <span class="step__num">1</span>
-        <div>
-          <h3>Установи Fabric Loader</h3>
-          <p>Скачай Fabric Loader <b>для Minecraft 1.21.11</b> и запусти установщик. Выбери свою версию игры.</p>
+        <pre class="console" id="console"></pre>
+        <div class="win__foot">
+          <span>статус: <b class="ok" id="statOk">ГОТОВО</b></span>
+          <span>время: <b id="statTime">0.0s</b></span>
         </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="stats">
+    <div class="wrap stats__in">
+      <div class="stat reveal"><b data-count="9">0</b><span>модулей</span></div>
+      <div class="stat reveal"><b data-count="60">0</b><span>FPS</span></div>
+      <div class="stat reveal"><b data-count="1">0</b><span>платёж</span></div>
+      <div class="stat reveal"><b data-count="11">0</b><span>версия MC</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ ТИКЕР ═══════════ -->
+<div class="ticker" aria-hidden="true"><div class="ticker__row" id="ticker"></div></div>
+
+<!-- ═══════════ ЦЕНА ═══════════ -->
+<section class="sect" id="price">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="kick">01 / ЦЕНА</span>
+      <h2>ОДИН ПЛАТЁЖ — НАВСЕГДА</h2>
+      <p class="lead">Без подписки, без автосписаний, без «продли и потеряешь».</p>
+    </div>
+
+    <div class="price">
+      <!-- торговец -->
+      <div class="trade reveal">
+        <div class="trade__head">
+          <span class="trade__face"></span>
+          <div>
+            <b>Загрузчик CrystalVisuals</b>
+            <span>постоянный доступ · v1.0.0</span>
+          </div>
+        </div>
+
+        <div class="trade__slots">
+          <div class="tslot"><span class="item item--emerald"></span><em>лоадер</em></div>
+          <div class="tarrow">➜</div>
+          <div class="tslot"><span class="item item--paper"></span><em>доступ</em></div>
+        </div>
+
+        <div class="trade__price">
+          <span class="trade__num">550</span><span class="trade__cur">₽</span>
+          <span class="trade__badge">НАВСЕГДА</span>
+        </div>
+
+        <ul class="trade__list">
+          <li>Лоадер и все 9 модулей</li>
+          <li>Все будущие обновления — бесплатно</li>
+          <li>Установка в два клика</li>
+          <li>Закрытый Discord с поддержкой</li>
+        </ul>
+
+        <a class="btn btn--buy btn--xl" href="https://discord.gg/d2vfVYmAX" target="_blank" rel="noopener" data-buy>
+          КУПИТЬ ЗА 550 ₽
+        </a>
+        <p class="trade__note">Оплата → доступ в Discord → ссылка на скачивание</p>
+      </div>
+
+      <div class="price__side">
+        <div class="perk reveal"><b>БЕЗ ПОДПИСКИ</b><span>один платёж, автосписаний нет</span></div>
+        <div class="perk reveal"><b>ОБНОВЛЕНИЯ БЕСПЛАТНО</b><span>новая версия — просто качаешь</span></div>
+        <div class="perk reveal"><b>ПОДДЕРЖКА 24/7</b><span>закрытый Discord-сервер</span></div>
+        <div class="perk reveal"><b>ДОСТУП СРАЗУ</b><span>в течение пары минут после оплаты</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ МОДУЛИ (инвентарь) ═══════════ -->
+<section class="sect sect--alt" id="modules">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="kick">02 / МОДУЛИ</span>
+      <h2>ЧТО ВНУТРИ</h2>
+      <p class="lead">Каждый модуль включается отдельной клавишей и пишется в профиль.</p>
+    </div>
+
+    <div class="inv">
+      <div class="inv__row reveal"><span class="islot" data-t="FPS BOOSTER — режет лишний рендер, +40% FPS"></span><span class="islot" data-t="HUD — показывает FPS, пинг, координаты, таймер"></span><span class="islot" data-t="FULLBRIGHT — полная яркость ночью и в пещерах"></span></div>
+      <div class="inv__row reveal"><span class="islot" data-t="NAMETAGS — ники, дистанция, HP сквозь стены"></span><span class="islot is-sel" data-t="ESP — подсветка сущностей и контейнеров"></span><span class="islot" data-t="TRAJECTORIES — траектории гранат и стрел"></span></div>
+      <div class="inv__row reveal"><span class="islot" data-t="KILLFEED — кто кого убил, с интервалом"></span><span class="islot" data-t="CLICKGUI FX — анимации открытия меню"></span><span class="islot" data-t="PROFILES — свои наборы модулей на каждый сервер"></span></div>
+    </div>
+
+    <div class="hintline reveal">наведи на слот — увидишь описание</div>
+  </div>
+</section>
+
+<!-- ═══════════ СКРИНШОТЫ ═══════════ -->
+<section class="sect" id="shots">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="kick">03 / СКРИНШОТЫ</span>
+      <h2>КАК ЭТО ВЫГЛЯДИТ</h2>
+      <p class="lead">Клик — просмотр во весь экран.</p>
+    </div>
+
+    <div class="shots">
+      <figure class="shot reveal" data-img="assets/img/shot-1.png" data-title="Главное меню">
+        <div class="gui shot__win"><div class="shot__img img1"></div></div>
+        <figcaption>Главное меню</figcaption>
+      </figure>
+      <figure class="shot reveal" data-img="assets/img/shot-2.png" data-title="HUD в игре">
+        <div class="gui shot__win"><div class="shot__img img2"></div></div>
+        <figcaption>В игре</figcaption>
+      </figure>
+      <figure class="shot reveal" data-img="assets/img/shot-3.png" data-title="Настройки">
+        <div class="gui shot__win"><div class="shot__img img3"></div></div>
+        <figcaption>Настройки</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ КАК ПОЛУЧИТЬ ═══════════ -->
+<section class="sect sect--alt" id="how">
+  <div class="wrap">
+    <div class="head reveal">
+      <span class="kick">04 / ПОКУПКА</span>
+      <h2>КАК ПОЛУЧИТЬ</h2>
+    </div>
+
+    <ol class="quest">
+      <li class="q reveal">
+        <span class="q__n">1</span>
+        <div><b>ОПЛАТИ 550 ₽</b><p>Жми кнопку, попадёшь в Discord, выбери способ оплаты.</p></div>
       </li>
-      <li class="step reveal">
-        <span class="step__num">2</span>
-        <div>
-          <h3>Положи Fabric API</h3>
-          <p>Закинь <b>Fabric API</b> в папку <code>.minecraft/mods</code>. Без него клиент не запустится.</p>
-        </div>
+      <li class="q reveal">
+        <span class="q__n">2</span>
+        <div><b>ПОЛУЧИ РОЛЬ</b><p>Бот выдаёт доступ, в канале <code>#download</code> появляется ссылка.</p></div>
       </li>
-      <li class="step reveal">
-        <span class="step__num">3</span>
-        <div>
-          <h3>Положи CrystalVisuals</h3>
-          <p>Скинь <b>.jar</b> клиента в ту же папку <code>mods</code> и запусти Fabric-профиль.</p>
-        </div>
+      <li class="q reveal">
+        <span class="q__n">3</span>
+        <div><b>ЗАПУСТИ ЛОАДЕР</b><p>Скачай файл, запусти, выбери версию Minecraft — дальше он сам.</p></div>
       </li>
-      <li class="step reveal">
-        <span class="step__num">4</span>
-        <div>
-          <h3>Готово</h3>
-          <p>Открой меню клавишей <kbd>R</kbd> (по умолчанию) и включай модули.</p>
-        </div>
+      <li class="q reveal">
+        <span class="q__n">4</span>
+        <div><b>ИГРАЙ</b><p>Меню на <kbd>R</kbd>, настройки сохраняются в профиле.</p></div>
       </li>
     </ol>
+
+    <div class="sect__cta reveal">
+      <a class="btn btn--buy" href="https://discord.gg/d2vfVYmAX" target="_blank" rel="noopener" data-buy>КУПИТЬ ЗА 550 ₽</a>
+    </div>
   </div>
 </section>
 
-<!-- ================= CHANGELOG ================= -->
-<section class="section section--alt" id="changelog">
-  <div class="wrap">
-    <header class="section__head">
-      <span class="kicker reveal">05 / История</span>
-      <h2 class="reveal">Changelog</h2>
-    </header>
+<!-- ═══════════ FAQ (чат) ═══════════ -->
+<section class="sect" id="faq">
+  <div class="wrap wrap--narrow">
+    <div class="head reveal">
+      <span class="kick">05 / FAQ</span>
+      <h2>ВОПРОСЫ</h2>
+    </div>
 
-    <div class="log">
-      <!-- TODO: допиши свои версии -->
-      <div class="log__row reveal">
-        <div class="log__ver">v1.0.0</div>
-        <div class="log__body">
-          <ul>
-            <li>Первый публичный релиз</li>
-            <li>Module System + 12 модулей</li>
-            <li>Поддержка 1.21.11</li>
-          </ul>
-        </div>
-        <div class="log__date">2026</div>
-      </div>
+    <div class="chat">
+      <details class="msg reveal">
+        <summary><span class="msg__who">ТЫ</span> Это подписка?</summary>
+        <p>Нет. Один платёж 550 ₽ и всё. Никаких продлений.</p>
+      </details>
+      <details class="msg reveal">
+        <summary><span class="msg__who">ТЫ</span> Будут обновления?</summary>
+        <p>Да, и они бесплатные. Новая версия просто появится в Discord.</p>
+      </details>
+      <details class="msg reveal">
+        <summary><span class="msg__who">ТЫ</span> Это работает на серверах?</summary>
+        <p>Модули видны только тебе, на серверной стороне ничего не меняется.</p>
+      </details>
+      <details class="msg reveal">
+        <summary><span class="msg__who">ТЫ</span> Если что-то сломается?</summary>
+        <p>В Discord живёт поддержка, там же откат на предыдущую версию.</p>
+      </details>
+      <details class="msg reveal">
+        <summary><span class="msg__who">ТЫ</span> Можно вернуть деньги?</summary>
+        <p>Если лоадер не заработал — возвращаем. Напиши в Discord.</p>
+      </details>
     </div>
   </div>
 </section>
 
 </main>
 
-<!-- ================= FOOTER ================= -->
-<footer class="footer">
-  <div class="wrap footer__inner">
-    <p>© <span id="year">2026</span> CrystalVisuals · Не связан с Mojang Studios</p>
-    <nav class="footer__links">
-      <!-- TODO: свои ссылки -->
-      <a href="https://github.com/webworld11121/CrystalVisuals" target="_blank" rel="noopener">GitHub</a>
-      <a href="https://discord.gg/" target="_blank" rel="noopener">Discord</a>
-      <a href="https://modrinth.com/" target="_blank" rel="noopener">Modrinth</a>
+<!-- ═══════════ FOOTER ═══════════ -->
+<footer class="ftr">
+  <div class="wrap ftr__in">
+    <div class="ftr__logo">
+      <span class="logo__gem" aria-hidden="true"></span>
+      <span class="logo__txt">CRYSTAL<span>VISUALS</span></span>
+    </div>
+    <p>© <span id="year">2026</span> CrystalVisuals · не связан с Mojang Studios</p>
+    <nav class="ftr__links">
+      <a href="https://discord.gg/d2vfVYmAX" target="_blank" rel="noopener">DISCORD</a>
+      <a href="#price">ЦЕНА</a>
+      <a href="#modules">МОДУЛИ</a>
     </nav>
   </div>
 </footer>
 
-<!-- ================= LIGHTBOX ================= -->
-<div class="lightbox" id="lightbox" hidden>
-  <button class="lightbox__close" id="lbClose" aria-label="Закрыть">&times;</button>
-  <button class="lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Назад">&#8249;</button>
-  <figure class="lightbox__inner">
-    <img id="lbImg" src="" alt="">
-    <figcaption id="lbTitle"></figcaption>
-  </figure>
-  <button class="lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Вперёд">&#8250;</button>
+<!-- ═══════════ ИГРОВОЕ МЕНЮ НА R ═══════════ -->
+<button class="keyhint" id="cvOpen" type="button" aria-haspopup="dialog">
+  <kbd>R</kbd> МЕНЮ
+</button>
+
+<div class="mcgui" id="mcgui" hidden role="dialog" aria-modal="true" aria-label="CrystalVisuals">
+  <div class="mcgui__bg" data-close></div>
+  <div class="mcgui__panel">
+    <div class="mcgui__top">
+      <span class="mcgui__gem"></span>
+      <b>CRYSTALVISUALS</b>
+      <span class="mcgui__v">v1.0.0</span>
+    </div>
+    <div class="mcgui__bar">
+      <span>ESC / R — ЗАКРЫТЬ</span>
+      <span>ВКЛ: <b id="mcCount">0</b>/9</span>
+    </div>
+    <div class="mcgui__grid" id="mcGrid">
+      <button class="mcb" type="button">FPS BOOSTER<em>OFF</em></button>
+      <button class="mcb" type="button">HUD<em>OFF</em></button>
+      <button class="mcb" type="button">FULLBRIGHT<em>OFF</em></button>
+      <button class="mcb" type="button">NAMETAGS<em>OFF</em></button>
+      <button class="mcb" type="button">ESP<em>OFF</em></button>
+      <button class="mcb" type="button">TRAJECTORIES<em>OFF</em></button>
+      <button class="mcb" type="button">KILLFEED<em>OFF</em></button>
+      <button class="mcb" type="button">CLICKGUI FX<em>OFF</em></button>
+      <button class="mcb" type="button">PROFILES<em>OFF</em></button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════ ПЕРЕХОД В DISCORD ═══════════ -->
+<div class="redir" id="redir" hidden>
+  <div class="gui redir__box">
+    <div class="win__bar">
+      <span class="win__dots"><i></i><i></i><i></i></span>
+      <b>redirect</b>
+    </div>
+    <p>Открываем Discord…</p>
+    <div class="redir__bar"><i id="redirFill"></i></div>
+  </div>
+</div>
+
+<!-- ═══════════ LIGHTBOX ═══════════ -->
+<div class="lbox" id="lbox" hidden>
+  <button class="lbox__x" id="lbX" aria-label="Закрыть">&times;</button>
+  <button class="lbox__n lbox__n--p" id="lbP" aria-label="Назад">&#8249;</button>
+  <figure class="lbox__in"><img id="lbImg" src="" alt=""><figcaption id="lbT"></figcaption></figure>
+  <button class="lbox__n lbox__n--x" id="lbN" aria-label="Вперёд">&#8250;</button>
 </div>
 
 <div class="toast" id="toast" role="status"></div>
