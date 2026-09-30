@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CrystalVisuals — Minecraft Client</title>
+<meta name="description" content="CrystalVisuals — Fabric клиент для Minecraft 1.21.11. Скачать, установка, фичи, changelog.">
+<meta property="og:title" content="CrystalVisuals">
+<meta property="og:description" content="Fabric клиент для Minecraft 1.21.11">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><text y='26' font-size='26'>&#9670;</text></svg>">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+<!-- фон -->
+<canvas class="bg-canvas" id="bgCanvas" aria-hidden="true"></canvas>
+<div class="bg-glow" aria-hidden="true"></div>
+<div class="bg-grid" aria-hidden="true"></div>
+<div class="bg-scan" aria-hidden="true"></div>
+<div class="scroll-progress" id="scrollBar" aria-hidden="true"></div>
+
+<a class="skip" href="#hero">К содержимому</a>
+
+<!-- ================= HEADER ================= -->
+<header class="header" id="header">
+  <div class="wrap header__inner">
+    <a class="logo" href="#hero">
+      <span class="logo__cube" aria-hidden="true"></span>
+      <span class="logo__text">Crystal<b>Visuals</b></span>
+    </a>
+
+    <nav class="nav" id="nav">
+      <a href="#features">Фичи</a>
+      <a href="#shots">Скриншоты</a>
+      <a href="#install">Установка</a>
+      <a href="#changelog">Changelog</a>
+      <a class="nav__dl" href="#download">Скачать</a>
+    </nav>
+
+    <button class="burger" id="burger" aria-label="Меню" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+  </div>
+</header>
+
+<main>
+
+<!-- ================= HERO ================= -->
+<section class="hero" id="hero">
+  <div class="wrap hero__inner">
+
+    <div class="badges reveal">
+      <span class="badge badge--live"><i></i> v1.0.0</span>
+      <span class="badge">Fabric</span>
+      <span class="badge">1.21.11</span>
+      <span class="badge">Java 21</span>
+    </div>
+
+    <h1 class="hero__title reveal">
+      <span class="glitch" data-text="CrystalVisuals">CrystalVisuals</span>
+    </h1>
+
+    <p class="hero__lead reveal" id="heroLead">
+      <!-- TODO: замени на реальное описание клиента, 1–2 предложения -->
+      Fabric-клиент для Minecraft 1.21.11. Оптимизация, визуалы и качество жизни —
+      всё в одном лёгком клиенте.
+    </p>
+
+    <div class="hero__actions reveal">
+      <!-- TODO: поменяй ссылку на свой GitHub Releases -->
+      <a class="btn btn--primary magnetic" href="#download">
+        <span>Скачать .jar</span>
+      </a>
+      <a class="btn btn--ghost" href="#install">Как установить</a>
+    </div>
+
+    <div class="hero__stats reveal">
+      <div class="stat"><b data-count="60">0</b><span>FPS</span></div>
+      <div class="stat"><b data-count="12">0</b><span>модулей</span></div>
+      <div class="stat"><b data-count="4">0</b><span>конфига</span></div>
+      <div class="stat"><b data-count="100">0</b><span>% без лаг</span></div>
+    </div>
+  </div>
+
+  <div class="hero__cube" aria-hidden="true"></div>
+</section>
+
+<!-- бегущая строка -->
+<div class="marquee" aria-hidden="true">
+  <div class="marquee__row" id="marquee">
+    <span>Fabric</span><span>◆</span><span>1.21.11</span><span>◆</span>
+    <span>Module System</span><span>◆</span><span>Keybinds</span><span>◆</span>
+    <span>Profiles</span><span>◆</span><span>Java 21</span><span>◆</span>
+  </div>
+</div>
+
+<!-- ================= DOWNLOAD ================= -->
+<section class="section section--alt" id="download">
+  <div class="wrap">
+    <header class="section__head">
+      <span class="kicker reveal">01 / Загрузка</span>
+      <h2 class="reveal">Скачать CrystalVisuals</h2>
+      <p class="reveal">Нужны Fabric Loader и Fabric API — без них клиент не запустится.</p>
+    </header>
+
+    <div class="dl reveal">
+      <!-- TODO: вставь реальные ссылки -->
+      <a class="dl__card dl__card--main magnetic" href="https://github.com/webworld11121/CrystalVisuals/releases" target="_blank" rel="noopener">
+        <div class="dl__icon">⬇</div>
+        <div>
+          <b>CrystalVisuals v1.0.0</b>
+          <span>Fabric · 1.21.11 · Java 21</span>
+        </div>
+        <div class="dl__size">~2.4 MB</div>
+      </a>
+
+      <a class="dl__card" href="https://fabricmc.net/use/installer/" target="_blank" rel="noopener">
+        <div class="dl__icon">⬇</div>
+        <div><b>Fabric Loader</b><span>Обязательная зависимость</span></div>
+      </a>
+
+      <a class="dl__card" href="https://modrinth.com/mod/fabric-api" target="_blank" rel="noopener">
+        <div class="dl__icon">⬇</div>
+        <div><b>Fabric API</b><span>Обязательная зависимость</span></div>
+      </a>
+    </div>
+
+    <!-- строка копирования -->
+    <div class="copybar reveal">
+      <code id="copyCmd">java -jar fabric-installer.jar</code>
+      <button class="copybar__btn" id="copyBtn" type="button">Копировать</button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= FEATURES ================= -->
+<section class="section" id="features">
+  <div class="wrap">
+    <header class="section__head">
+      <span class="kicker reveal">02 / Возможности</span>
+      <h2 class="reveal">Фичи клиента</h2>
+      <p class="reveal">Всё выключается по отдельности, ничего не ломает ваниллу.</p>
+    </header>
+
+    <div class="grid">
+      <!-- TODO: замени карточки на реальные модули клиента -->
+      <article class="card tilt reveal">
+        <div class="card__glow"></div>
+        <div class="card__icon">◈</div>
+        <h3>Module System</h3>
+        <p>Модули включаются по одной клавише и сохраняются в профили.</p>
+        <span class="card__tag">Ядро</span>
+      </article>
+
+      <article class="card tilt reveal">
+        <div class="card__glow"></div>
+        <div class="card__icon">▣</div>
+        <h3>FPS Booster</h3>
+        <p>Убирает лишний рендер, отключает анимации и разные мелочи.</p>
+        <span class="card__tag">Performance</span>
+      </article>
+
+      <article class="card tilt reveal">
+        <div class="card__glow"></div>
+        <div class="card__icon">✦</div>
+        <h3>Визуалы</h3>
+        <p>Свечение, блеск, кастомный GUI и анимации.</p>
+        <span class="card__tag">Visuals</span>
+      </article>
+
+      <article class="card tilt reveal">
+        <div class="card__glow"></div>
+        <div class="card__icon">⌘</div>
+        <h3>Keybinds</h3>
+        <p>Полная перенастройка биндов под себя, конфликты не ломаются.</p>
+        <span class="card__tag">UI</span>
+      </article>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SCREENSHOTS ================= -->
+<section class="section section--alt" id="shots">
+  <div class="wrap">
+    <header class="section__head">
+      <span class="kicker reveal">03 / Галерея</span>
+      <h2 class="reveal">Скриншоты</h2>
+      <p class="reveal">Клик по картинке — просмотр во весь экран.</p>
+    </header>
+
+    <div class="shots" id="shots">
+      <!-- TODO: положи свои скриншоты в assets/img/ (shot-1.png и т.д.)
+           Если файла нет — покажется градиент, ничего не сломается. -->
+      <figure class="shot reveal" data-img="assets/img/shot-1.png" data-title="Основной GUI">
+        <div class="shot__img s1"></div><figcaption>Основной GUI</figcaption>
+      </figure>
+      <figure class="shot reveal" data-img="assets/img/shot-2.png" data-title="Настройки модулей">
+        <div class="shot__img s2"></div><figcaption>Настройки</figcaption>
+      </figure>
+      <figure class="shot reveal" data-img="assets/img/shot-3.png" data-title="FPS / Performance">
+        <div class="shot__img s3"></div><figcaption>Performance</figcaption>
+      </figure>
+      <figure class="shot reveal" data-img="assets/img/shot-4.png" data-title="Визуалы">
+        <div class="shot__img s4"></div><figcaption>Визуалы</figcaption>
+      </figure>
+    </div>
+  </div>
+</section>
+
+<!-- ================= INSTALL ================= -->
+<section class="section" id="install">
+  <div class="wrap">
+    <header class="section__head">
+      <span class="kicker reveal">04 / Гайд</span>
+      <h2 class="reveal">Установка за 3 минуты</h2>
+    </header>
+
+    <ol class="steps">
+      <li class="step reveal">
+        <span class="step__num">1</span>
+        <div>
+          <h3>Установи Fabric Loader</h3>
+          <p>Скачай Fabric Loader <b>для Minecraft 1.21.11</b> и запусти установщик. Выбери свою версию игры.</p>
+        </div>
+      </li>
+      <li class="step reveal">
+        <span class="step__num">2</span>
+        <div>
+          <h3>Положи Fabric API</h3>
+          <p>Закинь <b>Fabric API</b> в папку <code>.minecraft/mods</code>. Без него клиент не запустится.</p>
+        </div>
+      </li>
+      <li class="step reveal">
+        <span class="step__num">3</span>
+        <div>
+          <h3>Положи CrystalVisuals</h3>
+          <p>Скинь <b>.jar</b> клиента в ту же папку <code>mods</code> и запусти Fabric-профиль.</p>
+        </div>
+      </li>
+      <li class="step reveal">
+        <span class="step__num">4</span>
+        <div>
+          <h3>Готово</h3>
+          <p>Открой меню клавишей <kbd>R</kbd> (по умолчанию) и включай модули.</p>
+        </div>
+      </li>
+    </ol>
+  </div>
+</section>
+
+<!-- ================= CHANGELOG ================= -->
+<section class="section section--alt" id="changelog">
+  <div class="wrap">
+    <header class="section__head">
+      <span class="kicker reveal">05 / История</span>
+      <h2 class="reveal">Changelog</h2>
+    </header>
+
+    <div class="log">
+      <!-- TODO: допиши свои версии -->
+      <div class="log__row reveal">
+        <div class="log__ver">v1.0.0</div>
+        <div class="log__body">
+          <ul>
+            <li>Первый публичный релиз</li>
+            <li>Module System + 12 модулей</li>
+            <li>Поддержка 1.21.11</li>
+          </ul>
+        </div>
+        <div class="log__date">2026</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<!-- ================= FOOTER ================= -->
+<footer class="footer">
+  <div class="wrap footer__inner">
+    <p>© <span id="year">2026</span> CrystalVisuals · Не связан с Mojang Studios</p>
+    <nav class="footer__links">
+      <!-- TODO: свои ссылки -->
+      <a href="https://github.com/webworld11121/CrystalVisuals" target="_blank" rel="noopener">GitHub</a>
+      <a href="https://discord.gg/" target="_blank" rel="noopener">Discord</a>
+      <a href="https://modrinth.com/" target="_blank" rel="noopener">Modrinth</a>
+    </nav>
+  </div>
+</footer>
+
+<!-- ================= LIGHTBOX ================= -->
+<div class="lightbox" id="lightbox" hidden>
+  <button class="lightbox__close" id="lbClose" aria-label="Закрыть">&times;</button>
+  <button class="lightbox__nav lightbox__nav--prev" id="lbPrev" aria-label="Назад">&#8249;</button>
+  <figure class="lightbox__inner">
+    <img id="lbImg" src="" alt="">
+    <figcaption id="lbTitle"></figcaption>
+  </figure>
+  <button class="lightbox__nav lightbox__nav--next" id="lbNext" aria-label="Вперёд">&#8250;</button>
+</div>
+
+<div class="toast" id="toast" role="status"></div>
+
+<script src="assets/js/main.js"></script>
+</body>
+</html>
